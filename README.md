@@ -1,5 +1,5 @@
 ## Forked to:
-Add tests and ewxamples of Hashtables of Hashtables of Hashtables to support slave_metas_ADDRESS.json schema for [AssimilateBus](https://github.com/IOT-123/AssimilateBus) for [ASSIMILATE IOT NETWORK](https://www.instructables.com/id/IOT123-ASSIMILATE-IOT-NETWORK/).
+Add tests and examples of Hashtables of Hashtables of Hashtables to support slave_metas_ADDRESS.json schema for [AssimilateBus](https://github.com/IOT-123/AssimilateBus) for [ASSIMILATE IOT NETWORK](https://www.instructables.com/id/IOT123-ASSIMILATE-IOT-NETWORK/).
 
 # Json.NetMF
 
