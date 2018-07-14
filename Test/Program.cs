@@ -49,6 +49,7 @@ namespace Test
             SerializeStringsWithEscapeChars();
             SerializeDeserializeDateTest();
             SerializeNestedHashtablesTest();
+            NestedHashtablesDeserializationTest();
         }
 
         public static bool SerializeStringsWithEscapeChars()
@@ -347,6 +348,70 @@ namespace Test
             }
         }
 
+        public static bool NestedHashtablesDeserializationTest()
+        {
+            try
+            {
+                string json = "{\"0\":{\"units\":\"%\",\"card_type\":\"chart-donut\",\"total\":100,\"max\":12,\"is_series\":true,\"low\":0,\"high\":100,\"values\":[{\"name\":\"labels\",\"value\":\"[]\"},{\"name\":\"series\",\"value\":\"0\"}]},\"1\":{\"units\":\"Celcius\",\"card_type\":\"chart-donut\",\"total\":80,\"max\":12,\"is_series\":true,\"low\":0,\"high\":100,\"values\":[{\"name\":\"labels\",\"value\":\"[]\"},{\"name\":\"series\",\"value\":\"0\"}]}}";
+                Hashtable root = JsonSerializer.DeserializeString(json) as Hashtable;
+                Hashtable branch1 = root["0"] as Hashtable;
+                Hashtable branch2 = root["1"] as Hashtable;
+                ArrayList leafs1 = branch1["values"] as ArrayList;
+                ArrayList leafs2 = branch2["values"] as ArrayList;
+                int branch1Total =Convert.ToInt16(branch1["total"].ToString());
+                int branch2Total = Convert.ToInt16(branch2["total"].ToString());
+
+                if (root.Count != 2)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (branch1.Count != 8)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (branch2.Count != 8)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (leafs1.Count != 2)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (leafs2.Count != 2)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (branch1Total != 100)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                if (branch2Total != 80)
+                {
+                    Debug.Print("Fail: NestedHashtablesDeserializationTest - Values did not match");
+                    return false;
+                }
+
+                Debug.Print("Success: NestedHashtablesDeserializationTest");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Fail: NestedHashtablesDeserializationTest - " + ex.Message);
+                return false;
+            }
+        }
 
     }
 }
