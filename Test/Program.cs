@@ -3,6 +3,16 @@ using Microsoft.SPOT;
 using System.Collections;
 using Json.NETMF;
 
+namespace System.Diagnostics
+{
+    public enum DebuggerBrowsableState
+    {
+        Never = 0,
+        Collapsed = 2,
+        RootHidden = 3
+    }
+}
+
 namespace Test
 {
     public class Program
@@ -38,6 +48,7 @@ namespace Test
             SerializeAbstractClassTest();
             SerializeStringsWithEscapeChars();
             SerializeDeserializeDateTest();
+            SerializeNestedHashtablesTest();
         }
 
         public static bool SerializeStringsWithEscapeChars()
@@ -279,5 +290,63 @@ namespace Test
                 return false;
             }
         }
+
+        public static bool SerializeNestedHashtablesTest()
+        {
+            try
+            {
+                Hashtable leaf11 = new Hashtable();
+                leaf11.Add("name", "labels");
+                leaf11.Add("value", "[]");
+                Hashtable leaf12 = new Hashtable();
+                leaf12.Add("name", "series");
+                leaf12.Add("value", "0");
+                ArrayList leafs1 = new ArrayList() { leaf11, leaf12 };
+                Hashtable branch1 = new Hashtable();
+                branch1.Add("card_type", "chart-donut");
+                branch1.Add("total", 100);
+                branch1.Add("units", "%");
+                branch1.Add("values", leafs1);
+                branch1.Add("is_series", true);
+                branch1.Add("max",12);
+                branch1.Add("low", 0);
+                branch1.Add("high", 100);
+                Hashtable leaf21 = new Hashtable();
+                leaf21.Add("name", "labels");
+                leaf21.Add("value", "[]");
+                Hashtable leaf22 = new Hashtable();
+                leaf22.Add("name", "series");
+                leaf22.Add("value", "0");
+                ArrayList leafs2 = new ArrayList() { leaf21, leaf22 };
+                Hashtable branch2 = new Hashtable();
+                branch2.Add("card_type", "chart-donut");
+                branch2.Add("total", 80);
+                branch2.Add("units", "Celcius");
+                branch2.Add("values", leafs2);
+                branch2.Add("is_series", true);
+                branch2.Add("max", 12);
+                branch2.Add("low", 0);
+                branch2.Add("high", 100);
+                Hashtable root = new Hashtable();
+                root.Add("0", branch1);
+                root.Add("1", branch2);
+                string json = JsonSerializer.SerializeObject(root);
+                string correctValue = "{\"0\":{\"units\":\"%\",\"card_type\":\"chart-donut\",\"total\":100,\"max\":12,\"is_series\":true,\"low\":0,\"high\":100,\"values\":[{\"name\":\"labels\",\"value\":\"[]\"},{\"name\":\"series\",\"value\":\"0\"}]},\"1\":{\"units\":\"Celcius\",\"card_type\":\"chart-donut\",\"total\":80,\"max\":12,\"is_series\":true,\"low\":0,\"high\":100,\"values\":[{\"name\":\"labels\",\"value\":\"[]\"},{\"name\":\"series\",\"value\":\"0\"}]}}";
+                if (json != correctValue)
+                {
+                    Debug.Print("Fail: SerializeNestedHashtablesTest - Values did not match");
+                    return false;
+                }
+                Debug.Print("Success: SerializeNestedHashtablesTest");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Fail: SerializeNestedHashtablesTest - " + ex.Message);
+                return false;
+            }
+        }
+
+
     }
 }
